@@ -1,0 +1,90 @@
+Paint Handling
+
+//		boolean firstDrawn = false;
+//		for(int i = level.getCamera().beginOnBoard; i < level.getCamera().objects.size(); i++) {
+//			if(level.getCamera().objects.get(i).getR().x <= 600 || level.getCamera().objects.get(i).getR().x + level.getCamera().objects.get(i).getR().width >= 0) {
+//				level.getCamera().addToBoard(level.getCamera().objects.get(i));
+//				if(firstDrawn) {
+//					level.getCamera().beginOnBoard = i;
+//					firstDrawn = true;
+//				}
+//			}
+//		}
+
+
+
+JUMPING IS MAJOR FUCKED UP.
+
+	public void mov1() {
+		//boost to overcome the jitter thing
+		if(velocityX == 0) {
+			if(movingRight) {
+				velocityX += .4;
+			} else if(movingLeft) {
+				velocityX -= .4;
+			}
+		}
+		//both directions pressed
+//		if(movingLeft && movingRight && onGround) {
+//			velocityX = 0;
+//		}
+		//deceleration
+		if(!movingLeft && !movingRight && onGround && velocityX > 0) {
+			velocityX -= .6;
+		}
+		else if(!movingLeft && !movingRight && onGround && velocityX < 0) {
+			velocityX += .6;
+		}
+		//acceleration
+		else if(onGround && velocityX < 6 && movingRight) {
+			velocityX += .6;
+		}
+		else if(onGround && velocityX > -6 && movingLeft) {
+			velocityX -= .6;
+		}
+//		//not sure
+//		else if(onGround && (velocityX > 0 && !movingRight || velocityX < 0 && !movingLeft)) {
+//			velocityX = 0;
+//		}
+		//horizontal deceleration in the air
+		else if(!onGround) {
+			if(velocityX > 0 && !movingRight) {
+				velocityX -= .1;
+			}
+			else if(velocityX < 0 && !movingLeft) {
+				velocityX += .1;
+			}
+		}
+		//can't go faster than 6
+		if(velocityX > 6) {
+        	velocityX = 6;
+        } 
+		else if(velocityX < -6) {
+        	velocityX = -6;
+        }
+		//makes it stop stuttering.
+		if(Math.abs(velocityX) <= .399) {
+			velocityX = 0;
+		}
+        if(positionX < 0) {
+            velocityX *= 0;
+            positionX = 0;
+        }
+        if(positionX > 580) {
+        	velocityX *= 0;
+        	positionX = 580;
+        }
+//		System.out.println("-----------------------------------------");
+//		System.out.println("VelocityX: " + velocityX);
+//		System.out.println("onGround: " + onGround);
+//		System.out.println("moving: " + movingRight + " " + movingLeft);
+		velocityY += gravity;
+        positionY += velocityY;
+        positionX += velocityX;
+        
+        if(positionY > 155.0) {
+            positionY = 155.0;
+            velocityY = 0.0;
+            onGround = true;
+        }
+	}
